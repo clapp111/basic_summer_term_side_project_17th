@@ -1,9 +1,7 @@
 package server.board.domain.user.dto;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import server.board.domain.user.entity.User;
 
 @Getter
 @ToString
@@ -20,4 +18,22 @@ public class UserResponseDto {
 
     private Double generation;
 
+    @Builder
+    private UserResponseDto(Long id, String email, String name, String part, Double generation) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.part = part;
+        this.generation = generation;
+    }
+
+    public static UserResponseDto create(User user){
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .part(user.getPart())
+                .generation(user.getGeneration())
+                .build();
+    }
 }
