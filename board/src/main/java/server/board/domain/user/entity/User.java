@@ -55,10 +55,10 @@ public class User {
         this.generation = generation;
     }
 
-    public User create(UserCreateRequestDto userCreateRequestDto){
+    public static User create(UserCreateRequestDto userCreateRequestDto, String encodedPassword){
         return User.builder()
                 .email(userCreateRequestDto.getEmail())
-                .password(userCreateRequestDto.getPassword())
+                .password(encodedPassword)
                 .name(userCreateRequestDto.getName())
                 .part(userCreateRequestDto.getPart())
                 .generation(userCreateRequestDto.getGeneration())
