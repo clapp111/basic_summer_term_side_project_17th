@@ -79,4 +79,12 @@ public class Assignment {
         this.link = assignmentCreateRequestDto.getLink();
         this.modifiedAt = LocalDate.now();
     }
+
+    public void addRecommend(){
+        this.recommendations += 1;
+    }
+
+    public void deleteRecommend(){
+        this.recommendations -= 1;
+    }
 }

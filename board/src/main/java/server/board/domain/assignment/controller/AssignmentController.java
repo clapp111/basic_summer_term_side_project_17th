@@ -55,16 +55,20 @@ public class AssignmentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /*// 과제 추천 추가(/api/assignments/{assignmentId}/recommendation)
+    // 과제 추천 추가(/api/assignments/{assignmentId}/recommendation)
     @PostMapping("/{assignmentId}/recommendation")
-    public ResponseEntity<?> addRecommendation() {
-
+    public ResponseEntity<?> addRecommendation(@PathVariable Long assignmentId,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        assignmentService.addRecommendation(assignmentId, userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 과제 추천 삭제(/api/assignments/{assignmentId}/recommendation)
     @DeleteMapping("/{assignmentId}/recommendation")
-    public ResponseEntity<?> deleteRecommendation() {
-
-    }*/
+    public ResponseEntity<?> deleteRecommendation(@PathVariable Long assignmentId,
+                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        assignmentService.deleteRecommendation(assignmentId, userDetails);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }
