@@ -26,14 +26,20 @@ public class Assignment {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "link")
+    @Column(name = "link", nullable = false)
     private String link;
 
     @Column(name = "created_at")
     private LocalDate createdAt;
+
+    @Column(name = "modified_at")
+    private LocalDate modifiedAt;
+
+    @Column(name = "recommendations")
+    private Integer recommendations;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -43,22 +49,34 @@ public class Assignment {
     private List<Recommendation> recommendationList =  new ArrayList<>();
 
     @Builder
-    private Assignment(Long id, String title, String content, String link, LocalDate createdAt, User user) {
+    private Assignment(Long id, String title, String content, String link, LocalDate createdAt,
+                       LocalDate modifiedAt, Integer recommendations, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.link = link;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.recommendations = recommendations;
         this.user = user;
     }
 
-    public Assignment create(AssignmentCreateRequestDto assignmentCreateRequestDto, User user){
+    public static Assignment create(AssignmentCreateRequestDto assignmentCreateRequestDto, User user){
         return Assignment.builder()
                 .title(assignmentCreateRequestDto.getTitle())
                 .content(assignmentCreateRequestDto.getContent())
                 .link(assignmentCreateRequestDto.getLink())
                 .createdAt(LocalDate.now())
+                .modifiedAt(LocalDate.now())
+                .recommendations(0)
                 .user(user)
                 .build();
+    }
+
+    public void modify(AssignmentCreateRequestDto assignmentCreateRequestDto) {
+        this.title = assignmentCreateRequestDto.getTitle();
+        this.content = assignmentCreateRequestDto.getContent();
+        this.link = assignmentCreateRequestDto.getLink();
+        this.modifiedAt = LocalDate.now();
     }
 }

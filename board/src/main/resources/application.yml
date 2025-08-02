@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/appcenter_board
-    username: admin
+    url: jdbc:mysql://localhost:3306/appcenter
+    username: appcenter
     password: q1w2e3r4
     driver-class-name: com.mysql.cj.jdbc.Driver
 
