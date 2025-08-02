@@ -33,7 +33,7 @@ public class Recommendation {
         this.assignment = assignment;
     }
 
-    public Recommendation create(User user, Assignment assignment) {
+    public static Recommendation create(User user, Assignment assignment) {
         return Recommendation.builder()
                 .user(user)
                 .assignment(assignment)

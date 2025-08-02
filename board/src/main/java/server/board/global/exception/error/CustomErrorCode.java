@@ -18,9 +18,11 @@ public enum CustomErrorCode implements ErrorCode {
     // 404 NOT_FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, 404,"존재하지 않는 회원"),
     ASSIGNMENT_NOT_FOUND(HttpStatus.NOT_FOUND, 404,"존재하지 않는 과제"),
+    RECOMMENDATION_NOT_FOUND(HttpStatus.NOT_FOUND, 404,"추천 기록이 없습니다."),
 
     // 409 CONFLICT
     DUPLICATE_USER(HttpStatus.CONFLICT, 409, "이미 가입된 이메일입니다."),
+    ALREADY_RECOMMEND_ERROR(HttpStatus.CONFLICT, 409, "이미 추천한 과제입니다."),
 
     // 500 INTERNAL SERVER ERROR
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 내부 오류 발생");

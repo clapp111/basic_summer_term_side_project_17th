@@ -9,6 +9,7 @@ import server.board.domain.assignment.dto.AssignmentCreateRequestDto;
 import server.board.domain.assignment.dto.AssignmentResponseDto;
 import server.board.domain.assignment.entity.Assignment;
 import server.board.domain.assignment.repository.AssignmentRepository;
+import server.board.domain.recommendation.entity.Recommendation;
 import server.board.domain.recommendation.repository.RecommendationRepository;
 import server.board.domain.user.entity.UserDetailsImpl;
 import server.board.domain.user.repository.UserRepository;
@@ -36,9 +37,8 @@ public class AssignmentService {
             assignmentPage = assignmentRepository.findAllOrderByRecommendation(pageable);
         }
         // 날짜순(default) 정렬
-        else {
-            assignmentPage = assignmentRepository.findAllOrderByCreatedAt(pageable);
-        }
+        else assignmentPage = assignmentRepository.findAllOrderByCreatedAt(pageable);
+
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
         for (Assignment assignment : assignmentPage.getContent()){
             assignmentResponseDtoList.add(AssignmentResponseDto.create(assignment));
@@ -73,5 +73,37 @@ public class AssignmentService {
         assignmentRepository.delete(assignment);
     }
 
+    @Transactional
+    public void addRecommendation(Long assignmentId, UserDetailsImpl userDetails) {
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));
 
+        // 이미 추천했다면 중복 추천 불가
+        if(recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignmentId).isPresent()){
+            throw new RestApiException(ALREADY_RECOMMEND_ERROR);
+        }
+
+        // 해당 과제의 recommendations + 1
+        assignment.addRecommend();
+
+        // 추천 엔티티 생성
+        Recommendation recommendation = Recommendation.create(userDetails.getUser(), assignment);
+        recommendationRepository.save(recommendation);
+    }
+
+    @Transactional
+    public void deleteRecommendation(Long assignmentId, UserDetailsImpl userDetails) {
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));
+
+        // 추천하지 않았다면 추천 취소 불가
+        Recommendation recommendation = recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignmentId)
+                .orElseThrow(() -> new RestApiException(RECOMMENDATION_NOT_FOUND));
+
+        // 해당 과제의 recommendations - 1
+        assignment.deleteRecommend();
+
+        // 추천 엔티티 삭제
+        recommendationRepository.delete(recommendation);
+    }
 }
