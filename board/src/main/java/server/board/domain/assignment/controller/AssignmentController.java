@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import server.board.domain.assignment.dto.AssignmentCreateRequestDto;
 import server.board.domain.assignment.dto.AssignmentResponseDto;
 import server.board.domain.assignment.service.AssignmentService;
+import server.board.domain.recommendation.service.RecommendationService;
 import server.board.domain.user.entity.UserDetailsImpl;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class AssignmentController {
 
     public final AssignmentService assignmentService;
+    public final RecommendationService recommendationService;
 
     // 전체 과제 조회(/api/assignments?sort={options})
     @GetMapping
@@ -59,7 +61,7 @@ public class AssignmentController {
     @PostMapping("/{assignmentId}/recommendation")
     public ResponseEntity<?> addRecommendation(@PathVariable Long assignmentId,
                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        assignmentService.addRecommendation(assignmentId, userDetails);
+        recommendationService.addRecommendation(assignmentId, userDetails);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -67,7 +69,7 @@ public class AssignmentController {
     @DeleteMapping("/{assignmentId}/recommendation")
     public ResponseEntity<?> deleteRecommendation(@PathVariable Long assignmentId,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        assignmentService.deleteRecommendation(assignmentId, userDetails);
+        recommendationService.deleteRecommendation(assignmentId, userDetails);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
