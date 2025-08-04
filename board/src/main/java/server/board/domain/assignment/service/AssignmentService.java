@@ -2,6 +2,7 @@ package server.board.domain.assignment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +31,10 @@ public class AssignmentService {
         Page<Assignment> assignmentPage;
 
         // 추천순 정렬
-        if ("recommendations".equals(options)) {
-            assignmentPage = assignmentRepository.findAllOrderByRecommendation(pageable);
+        if ("recommendation".equals(options)) {
+            // Pageable 에서 정렬 조건을 제외하고 페이징 정보만 사용한 새로운 Pageable 객체 생성
+            Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+            assignmentPage = assignmentRepository.findAllOrderByRecommendation(newPageable);
         }
         // 날짜순(default) 정렬
         else assignmentPage = assignmentRepository.findAllOrderByCreatedAt(pageable);

@@ -29,9 +29,6 @@ public class RecommendationService {
             throw new RestApiException(ALREADY_RECOMMEND_ERROR);
         }
 
-        // 해당 과제의 recommendations + 1
-        assignment.addRecommend();
-
         // 추천 엔티티 생성
         Recommendation recommendation = Recommendation.create(userDetails.getUser(), assignment);
         recommendationRepository.save(recommendation);
@@ -45,9 +42,6 @@ public class RecommendationService {
         // 추천하지 않았다면 추천 취소 불가
         Recommendation recommendation = recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignmentId)
                 .orElseThrow(() -> new RestApiException(RECOMMENDATION_NOT_FOUND));
-
-        // 해당 과제의 recommendations - 1
-        assignment.deleteRecommend();
 
         // 추천 엔티티 삭제
         recommendationRepository.delete(recommendation);

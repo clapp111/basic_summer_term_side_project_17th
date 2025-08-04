@@ -3,7 +3,7 @@ package server.board.domain.assignment.dto;
 import lombok.*;
 import server.board.domain.assignment.entity.Assignment;
 
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @ToString
@@ -12,17 +12,19 @@ public class AssignmentResponseDto {
 
     private Long id;
     private String title;
+    private String writer;
     private String content;
     private String link;
-    private LocalDate createdAt;
-    private LocalDate modifiedAt;
+    private String createdAt;
+    private String modifiedAt;
     private Integer recommendations;
 
     @Builder
-    private AssignmentResponseDto(Long id, String title, String content, String link,
-                                 LocalDate createdAt, LocalDate modifiedAt, Integer recommendations) {
+    private AssignmentResponseDto(Long id, String title, String writer, String content, String link,
+                                  String createdAt, String modifiedAt, Integer recommendations) {
         this.id = id;
         this.title = title;
+        this.writer = writer;
         this.content = content;
         this.link = link;
         this.createdAt = createdAt;
@@ -34,11 +36,14 @@ public class AssignmentResponseDto {
         return AssignmentResponseDto.builder()
                 .id(assignment.getId())
                 .title(assignment.getTitle())
+                .writer(assignment.getUser().getName())
                 .content(assignment.getContent())
                 .link(assignment.getLink())
-                .createdAt(assignment.getCreatedAt())
-                .modifiedAt(assignment.getModifiedAt())
-                .recommendations(assignment.getRecommendations())
+                .createdAt(assignment.getCreatedAt()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .modifiedAt(assignment.getModifiedAt()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .recommendations(assignment.getRecommendationList().size())
                 .build();
     }
 }

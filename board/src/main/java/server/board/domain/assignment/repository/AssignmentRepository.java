@@ -11,6 +11,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     @Query("SELECT a FROM Assignment a ORDER BY a.createdAt DESC")
     Page<Assignment> findAllOrderByCreatedAt(Pageable pageable);
 
-    @Query("SELECT a FROM Assignment a ORDER BY a.recommendations DESC")
+    @Query("SELECT a FROM Assignment a LEFT JOIN a.recommendationList r GROUP BY a " +
+            "ORDER BY COUNT(r) DESC, a.createdAt DESC")
     Page<Assignment> findAllOrderByRecommendation(Pageable pageable);
 }
