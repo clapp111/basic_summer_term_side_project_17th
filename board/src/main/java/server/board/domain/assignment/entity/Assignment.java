@@ -9,7 +9,7 @@ import server.board.domain.assignment.dto.AssignmentCreateRequestDto;
 import server.board.domain.recommendation.entity.Recommendation;
 import server.board.domain.user.entity.User;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +33,10 @@ public class Assignment {
     private String link;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "modified_at")
-    private LocalDate modifiedAt;
-
-    @Column(name = "recommendations")
-    private Integer recommendations;
+    private LocalDateTime modifiedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -49,15 +46,14 @@ public class Assignment {
     private List<Recommendation> recommendationList =  new ArrayList<>();
 
     @Builder
-    private Assignment(Long id, String title, String content, String link, LocalDate createdAt,
-                       LocalDate modifiedAt, Integer recommendations, User user) {
+    private Assignment(Long id, String title, String content, String link,
+                       LocalDateTime createdAt, LocalDateTime modifiedAt,User user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.link = link;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.recommendations = recommendations;
         this.user = user;
     }
 
@@ -66,9 +62,8 @@ public class Assignment {
                 .title(assignmentCreateRequestDto.getTitle())
                 .content(assignmentCreateRequestDto.getContent())
                 .link(assignmentCreateRequestDto.getLink())
-                .createdAt(LocalDate.now())
-                .modifiedAt(LocalDate.now())
-                .recommendations(0)
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
                 .user(user)
                 .build();
     }
@@ -77,14 +72,6 @@ public class Assignment {
         this.title = assignmentCreateRequestDto.getTitle();
         this.content = assignmentCreateRequestDto.getContent();
         this.link = assignmentCreateRequestDto.getLink();
-        this.modifiedAt = LocalDate.now();
-    }
-
-    public void addRecommend(){
-        this.recommendations += 1;
-    }
-
-    public void deleteRecommend(){
-        this.recommendations -= 1;
+        this.modifiedAt = LocalDateTime.now();
     }
 }
