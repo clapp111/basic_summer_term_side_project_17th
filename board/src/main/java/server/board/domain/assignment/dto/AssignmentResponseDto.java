@@ -18,10 +18,11 @@ public class AssignmentResponseDto {
     private String createdAt;
     private String modifiedAt;
     private Integer recommendations;
+    private Boolean isRecommended;
 
     @Builder
     private AssignmentResponseDto(Long id, String title, String writer, String content, String link,
-                                  String createdAt, String modifiedAt, Integer recommendations) {
+                                  String createdAt, String modifiedAt,Integer recommendations, Boolean isRecommended) {
         this.id = id;
         this.title = title;
         this.writer = writer;
@@ -30,9 +31,10 @@ public class AssignmentResponseDto {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.recommendations = recommendations;
+        this.isRecommended = isRecommended;
     }
 
-    public static AssignmentResponseDto create(Assignment assignment) {
+    public static AssignmentResponseDto create(Assignment assignment, Boolean isRecommended) {
         return AssignmentResponseDto.builder()
                 .id(assignment.getId())
                 .title(assignment.getTitle())
@@ -44,6 +46,7 @@ public class AssignmentResponseDto {
                 .modifiedAt(assignment.getModifiedAt()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .recommendations(assignment.getRecommendationList().size())
+                .isRecommended(isRecommended)
                 .build();
     }
 }
