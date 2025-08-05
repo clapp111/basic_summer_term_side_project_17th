@@ -32,7 +32,7 @@ public class UserResponseDto {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .part(user.getPart())
+                .part(user.getPart().getLabel())
                 .generation(user.getGeneration())
                 .build();
     }

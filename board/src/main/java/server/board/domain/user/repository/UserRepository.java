@@ -1,6 +1,7 @@
 package server.board.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import server.board.domain.user.entity.Part;
 import server.board.domain.user.entity.User;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByEmail(String email);
 
-    List<User> findByPart(String part);
+    List<User> findByPart(Part part);
 
     boolean existsByEmail(String email);
 }

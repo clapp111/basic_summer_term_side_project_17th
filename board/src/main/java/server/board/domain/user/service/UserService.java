@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.board.domain.user.dto.UserResponseDto;
+import server.board.domain.user.entity.Part;
 import server.board.domain.user.entity.User;
 import server.board.domain.user.repository.UserRepository;
 import server.board.global.exception.error.RestApiException;
@@ -37,7 +38,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserResponseDto> findByPart(String part) {
         // repository 에서 파트 유저 조회 (없다면 에러 발생)
-        List<User> userList = userRepository.findByPart(part);
+        List<User> userList = userRepository.findByPart(Part.from(part));
         if (userList.isEmpty()) {
             throw new RestApiException(USER_NOT_FOUND);
         }
