@@ -28,8 +28,9 @@ public class AssignmentController {
     @GetMapping
     public ResponseEntity<List<AssignmentResponseDto>> getAllAssignmentsInfo(
             @PageableDefault Pageable pageable,
+            @AuthenticationPrincipal UserDetailsImpl  userDetails,
             @RequestParam(value = "sort", defaultValue = "createdAt") String options) {
-        return ResponseEntity.status(HttpStatus.OK).body(assignmentService.findAllOrderByOption(pageable, options));
+        return ResponseEntity.status(HttpStatus.OK).body(assignmentService.findAllOrderByOption(pageable, options, userDetails));
     }
 
     // 과제 제출(/api/assignments)

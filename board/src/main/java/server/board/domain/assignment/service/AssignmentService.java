@@ -12,7 +12,6 @@ import server.board.domain.assignment.entity.Assignment;
 import server.board.domain.assignment.repository.AssignmentRepository;
 import server.board.domain.recommendation.repository.RecommendationRepository;
 import server.board.domain.user.entity.UserDetailsImpl;
-import server.board.domain.user.repository.UserRepository;
 import server.board.global.exception.error.RestApiException;
 
 import java.util.ArrayList;
@@ -25,9 +24,10 @@ import static server.board.global.exception.error.CustomErrorCode.*;
 public class AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
+    private final RecommendationRepository recommendationRepository;
 
     @Transactional(readOnly = true)
-    public List<AssignmentResponseDto> findAllOrderByOption(Pageable pageable, String options) {
+    public List<AssignmentResponseDto> findAllOrderByOption(Pageable pageable, String options, UserDetailsImpl userDetails) {
         Page<Assignment> assignmentPage;
 
         // 추천순 정렬
@@ -41,7 +41,11 @@ public class AssignmentService {
 
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
         for (Assignment assignment : assignmentPage.getContent()){
-            assignmentResponseDtoList.add(AssignmentResponseDto.create(assignment));
+            Boolean isRecommended = Boolean.FALSE;
+            if (recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignment.getId()).isPresent()){
+                isRecommended = Boolean.TRUE;
+            }
+            assignmentResponseDtoList.add(AssignmentResponseDto.create(assignment, isRecommended));
         }
         return assignmentResponseDtoList;
     }
