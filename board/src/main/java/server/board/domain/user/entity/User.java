@@ -34,7 +34,7 @@ public class User {
     private String name;
 
     @Column(name = "part")
-    private String part;
+    private Part part;
 
     @Column(name = "generation")
     private Double generation;
@@ -46,7 +46,7 @@ public class User {
     private List<Recommendation> recommendationList =  new ArrayList<>();
 
     @Builder
-    private User(Long id, String email, String password, String name, String part, Double generation) {
+    private User(Long id, String email, String password, String name, Part part, Double generation) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -60,7 +60,7 @@ public class User {
                 .email(userCreateRequestDto.getEmail())
                 .password(encodedPassword)
                 .name(userCreateRequestDto.getName())
-                .part(userCreateRequestDto.getPart())
+                .part(Part.from(userCreateRequestDto.getPart()))
                 .generation(userCreateRequestDto.getGeneration())
                 .build();
     }

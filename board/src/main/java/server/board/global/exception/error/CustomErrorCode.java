@@ -10,6 +10,7 @@ public enum CustomErrorCode implements ErrorCode {
 
     //400 Bad Request
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, 400, "인자값이 유효하지 않음"),
+    INVALID_PART_VALUE(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 파트입니다."),
 
     // 403 Forbidden
     ASSIGNMENT_MODIFY_FORBIDDEN(HttpStatus.FORBIDDEN, 403, "로그인한 유저의 해당 과제 수정 권한이 없음"),
