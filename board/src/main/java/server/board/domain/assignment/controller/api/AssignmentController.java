@@ -1,4 +1,4 @@
-package server.board.domain.assignment.controller;
+package server.board.domain.assignment.controller.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import server.board.domain.assignment.controller.docs.AssignmentControllerSpecification;
 import server.board.domain.assignment.dto.AssignmentCreateRequestDto;
 import server.board.domain.assignment.dto.AssignmentResponseDto;
 import server.board.domain.assignment.service.AssignmentService;
@@ -19,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/assignments")
-public class AssignmentController {
+public class AssignmentController implements AssignmentControllerSpecification {
 
     public final AssignmentService assignmentService;
     public final RecommendationService recommendationService;
