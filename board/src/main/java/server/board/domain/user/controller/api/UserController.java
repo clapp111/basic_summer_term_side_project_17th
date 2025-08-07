@@ -1,4 +1,4 @@
-package server.board.domain.user.controller;
+package server.board.domain.user.controller.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import server.board.domain.user.controller.docs.UserControllerSpecification;
 import server.board.domain.user.dto.UserResponseDto;
 import server.board.domain.user.entity.UserDetailsImpl;
 import server.board.domain.user.service.UserService;
@@ -17,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserControllerSpecification {
 
     public final UserService userService;
 

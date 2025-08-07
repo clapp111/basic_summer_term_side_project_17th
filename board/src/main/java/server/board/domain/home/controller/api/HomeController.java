@@ -1,4 +1,4 @@
-package server.board.domain.home.controller;
+package server.board.domain.home.controller.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,15 +8,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import server.board.domain.home.controller.docs.HomeControllerSpecification;
 import server.board.domain.home.dto.LoginRequestDto;
 import server.board.domain.home.service.HomeService;
+import server.board.domain.user.controller.docs.UserControllerSpecification;
 import server.board.domain.user.dto.UserCreateRequestDto;
 import server.board.global.jwt.JwtToken;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class HomeController {
+public class HomeController implements HomeControllerSpecification {
 
     private final HomeService homeService;
 
