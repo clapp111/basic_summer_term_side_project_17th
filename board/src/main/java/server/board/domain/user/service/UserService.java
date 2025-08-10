@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.board.domain.user.dto.UserResponseDto;
-import server.board.domain.user.entity.Part;
+import server.board.domain.user.enums.Part;
 import server.board.domain.user.entity.User;
 import server.board.domain.user.repository.UserRepository;
 import server.board.global.exception.error.RestApiException;
