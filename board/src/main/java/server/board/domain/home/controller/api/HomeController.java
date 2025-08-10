@@ -13,6 +13,7 @@ import server.board.domain.home.dto.LoginRequestDto;
 import server.board.domain.home.service.HomeService;
 import server.board.domain.user.controller.docs.UserControllerSpecification;
 import server.board.domain.user.dto.UserCreateRequestDto;
+import server.board.domain.user.dto.UserResponseDto;
 import server.board.global.jwt.JwtToken;
 
 @RestController
@@ -30,8 +31,7 @@ public class HomeController implements HomeControllerSpecification {
 
     // 회원가입(/api/sign-up)
     @PostMapping("/sign-up")
-    public ResponseEntity<?>  signUp(@Valid @RequestBody UserCreateRequestDto userCreateRequestDto){
-        homeService.signUp(userCreateRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserResponseDto>  signUp(@Valid @RequestBody UserCreateRequestDto userCreateRequestDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(homeService.signUp(userCreateRequestDto));
     }
 }
