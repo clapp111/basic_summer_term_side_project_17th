@@ -11,12 +11,12 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum Part {
 
-    Basic("베이직"),
-    Server("서버"),
-    Web("웹"),
-    Android("안드로이드"),
-    IOS("IOS"),
-    Design("디자인");
+    Basic("basic"),
+    Server("server"),
+    Web("web"),
+    Android("android"),
+    IOS("ios"),
+    Design("design");
 
     private final String label;
 

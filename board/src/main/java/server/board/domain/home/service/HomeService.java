@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.board.domain.home.dto.LoginRequestDto;
 import server.board.domain.user.dto.UserCreateRequestDto;
+import server.board.domain.user.dto.UserResponseDto;
 import server.board.domain.user.entity.User;
 import server.board.domain.user.repository.UserRepository;
 import server.board.global.exception.error.CustomErrorCode;
@@ -42,14 +43,16 @@ public class HomeService {
     }
 
     @Transactional
-    public void signUp(UserCreateRequestDto userCreateRequestDto) {
+    public UserResponseDto signUp(UserCreateRequestDto userCreateRequestDto) {
         // 중복되는 이메일(유저)가 있다면 중복 에러 발생
         if (userRepository.existsByEmail(userCreateRequestDto.getEmail())) {
             throw new RestApiException(CustomErrorCode.DUPLICATE_USER);
         }
-        userRepository.save(User.create(
+        User user = User.create(
                 userCreateRequestDto,
                 bCryptPasswordEncoder.encode(userCreateRequestDto.getPassword())
-        ));
+        );
+        userRepository.save(user);
+        return UserResponseDto.create(user);
     }
 }

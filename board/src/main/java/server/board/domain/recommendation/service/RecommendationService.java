@@ -3,6 +3,7 @@ package server.board.domain.recommendation.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.board.domain.assignment.dto.AssignmentResponseDto;
 import server.board.domain.assignment.entity.Assignment;
 import server.board.domain.assignment.repository.AssignmentRepository;
 import server.board.domain.recommendation.entity.Recommendation;
@@ -20,7 +21,7 @@ public class RecommendationService {
     public final RecommendationRepository recommendationRepository;
 
     @Transactional
-    public void addRecommendation(Long assignmentId, UserDetailsImpl userDetails) {
+    public AssignmentResponseDto addRecommendation(Long assignmentId, UserDetailsImpl userDetails) {
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));
 
@@ -32,6 +33,8 @@ public class RecommendationService {
         // 추천 엔티티 생성
         Recommendation recommendation = Recommendation.create(userDetails.getUser(), assignment);
         recommendationRepository.save(recommendation);
+
+        return AssignmentResponseDto.create(assignment, Boolean.TRUE);
     }
 
     @Transactional

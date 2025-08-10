@@ -41,23 +41,20 @@ public class AssignmentService {
 
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
         for (Assignment assignment : assignmentPage.getContent()){
-            Boolean isRecommended = Boolean.FALSE;
-            if (recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignment.getId()).isPresent()){
-                isRecommended = Boolean.TRUE;
-            }
-            assignmentResponseDtoList.add(AssignmentResponseDto.create(assignment, isRecommended));
+            assignmentResponseDtoList.add(AssignmentResponseDto.create(assignment, checkRecommended(userDetails, assignment)));
         }
         return assignmentResponseDtoList;
     }
 
     @Transactional
-    public void submit(AssignmentCreateRequestDto assignmentCreateRequestDto, UserDetailsImpl userDetails) {
+    public AssignmentResponseDto submit(AssignmentCreateRequestDto assignmentCreateRequestDto, UserDetailsImpl userDetails) {
         Assignment assignment = Assignment.create(assignmentCreateRequestDto, userDetails.getUser());
         assignmentRepository.save(assignment);
+        return AssignmentResponseDto.create(assignment, Boolean.FALSE);
     }
 
     @Transactional
-    public void modify(Long assignmentId, AssignmentCreateRequestDto assignmentCreateRequestDto, UserDetailsImpl userDetails) {
+    public AssignmentResponseDto modify(Long assignmentId, AssignmentCreateRequestDto assignmentCreateRequestDto, UserDetailsImpl userDetails) {
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));
 
@@ -65,6 +62,8 @@ public class AssignmentService {
             throw new RestApiException(ASSIGNMENT_MODIFY_FORBIDDEN);
         }
         assignment.modify(assignmentCreateRequestDto);
+
+        return AssignmentResponseDto.create(assignment, checkRecommended(userDetails, assignment));
     }
 
     @Transactional
@@ -75,5 +74,14 @@ public class AssignmentService {
             throw new RestApiException(ASSIGNMENT_DELETE_FORBIDDEN);
         }
         assignmentRepository.delete(assignment);
+    }
+
+    // 사용자가 해당 과제에 추천을 했는지 여부를 확인하는 메서드
+    private Boolean checkRecommended(UserDetailsImpl userDetails, Assignment assignment){
+        Boolean isRecommended = Boolean.FALSE;
+        if (recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignment.getId()).isPresent()){
+            isRecommended = Boolean.TRUE;
+        }
+        return isRecommended;
     }
 }
