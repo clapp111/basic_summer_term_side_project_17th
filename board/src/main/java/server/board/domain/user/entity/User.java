@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import server.board.domain.assignment.entity.Assignment;
 import server.board.domain.recommendation.entity.Recommendation;
 import server.board.domain.user.dto.UserCreateRequestDto;
+import server.board.domain.user.enums.Part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "part")

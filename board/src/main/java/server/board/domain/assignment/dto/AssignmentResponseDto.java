@@ -1,5 +1,6 @@
 package server.board.domain.assignment.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import server.board.domain.assignment.entity.Assignment;
 
@@ -7,17 +8,35 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @ToString
+@Schema(description = "과제 정보 응답 DTO")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AssignmentResponseDto {
 
+    @Schema(description = "유저 ID", example = "1")
     private Long id;
+
+    @Schema(description = "제목", example = "TITLE")
     private String title;
+
+    @Schema(description = "작성자", example = "홍길동")
     private String writer;
+
+    @Schema(description = "내용", example = "CONTENT")
     private String content;
+
+    @Schema(description = "링크", example = "https://my-assignmnet-1.com")
     private String link;
+
+    @Schema(description = "생성일", example = "2025-08-05 14:43:11")
     private String createdAt;
+
+    @Schema(description = "수정일", example = "2025-08-10 21:45:23")
     private String modifiedAt;
+
+    @Schema(description = "추천수", example = "8")
     private Integer recommendations;
+
+    @Schema(description = "추천 여부", example = "YES")
     private Boolean isRecommended;
 
     @Builder

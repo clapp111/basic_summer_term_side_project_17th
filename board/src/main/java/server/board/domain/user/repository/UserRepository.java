@@ -1,7 +1,7 @@
 package server.board.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import server.board.domain.user.entity.Part;
+import server.board.domain.user.enums.Part;
 import server.board.domain.user.entity.User;
 
 import java.util.List;

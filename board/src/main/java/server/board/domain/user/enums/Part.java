@@ -1,4 +1,4 @@
-package server.board.domain.user.entity;
+package server.board.domain.user.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
