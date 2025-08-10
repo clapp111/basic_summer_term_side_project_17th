@@ -36,19 +36,17 @@ public class AssignmentController implements AssignmentControllerSpecification {
 
     // 과제 제출(/api/assignments)
     @PostMapping
-    public ResponseEntity<?> submitAssignment(@AuthenticationPrincipal UserDetailsImpl  userDetails,
+    public ResponseEntity<AssignmentResponseDto> submitAssignment(@AuthenticationPrincipal UserDetailsImpl  userDetails,
                                               @Valid @RequestBody AssignmentCreateRequestDto assignmentCreateRequestDto) {
-        assignmentService.submit(assignmentCreateRequestDto, userDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(assignmentService.submit(assignmentCreateRequestDto, userDetails));
     }
 
     // 과제 수정(/api/assignments/{assignmentId})
     @PutMapping("/{assignmentId}")
-    public ResponseEntity<?> modifyAssignment(@PathVariable Long assignmentId,
+    public ResponseEntity<AssignmentResponseDto> modifyAssignment(@PathVariable Long assignmentId,
                                               @AuthenticationPrincipal UserDetailsImpl  userDetails,
                                               @Valid @RequestBody AssignmentCreateRequestDto assignmentCreateRequestDto) {
-        assignmentService.modify(assignmentId, assignmentCreateRequestDto, userDetails);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(assignmentService.modify(assignmentId, assignmentCreateRequestDto, userDetails));
     }
 
     // 과제 삭제(/api/assignments/{assignmentId})
@@ -61,10 +59,9 @@ public class AssignmentController implements AssignmentControllerSpecification {
 
     // 과제 추천 추가(/api/assignments/{assignmentId}/recommendation)
     @PostMapping("/{assignmentId}/recommendation")
-    public ResponseEntity<?> addRecommendation(@PathVariable Long assignmentId,
+    public ResponseEntity<AssignmentResponseDto> addRecommendation(@PathVariable Long assignmentId,
                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        recommendationService.addRecommendation(assignmentId, userDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(recommendationService.addRecommendation(assignmentId, userDetails));
     }
 
     // 과제 추천 삭제(/api/assignments/{assignmentId}/recommendation)
