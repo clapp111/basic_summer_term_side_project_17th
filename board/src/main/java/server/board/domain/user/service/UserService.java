@@ -22,11 +22,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAll() {
-        // repository 에서 전체 유저 조회 (없다면 에러 발생)
+        // repository 에서 전체 유저 조회
         List<User> userList = userRepository.findAll();
-        if (userList.isEmpty()) {
-            throw new RestApiException(USER_NOT_FOUND);
-        }
+
         // 응답 전용 객체로 변환 및 반환
         List<UserResponseDto> userResponseDtoList = new ArrayList<>();
         for (User user : userList) {
@@ -37,11 +35,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserResponseDto> findByPart(String part) {
-        // repository 에서 파트 유저 조회 (없다면 에러 발생)
+        // repository 에서 파트 유저 조회
         List<User> userList = userRepository.findByPart(Part.from(part));
-        if (userList.isEmpty()) {
-            throw new RestApiException(USER_NOT_FOUND);
-        }
+
         // 응답 전용 객체로 변환 및 반환
         List<UserResponseDto> userResponseDtoList = new ArrayList<>();
         for (User user : userList) {

@@ -23,14 +23,14 @@ public class UserCreateRequestDto {
 
     @Schema(description = "패스워드", example = "Appcenter1234@")
     @NotBlank(message = "패스워드는 필수입니다.")
-    @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*]{8,16}$", message = "비밀번호는 8~16자의 영문 대소문자, 숫자, 특수문자로 이루어져야 합니다.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,16}$", message = "비밀번호는 8~16자의 영문 대소문자, 숫자, 특수문자로 이루어져야 합니다.")
     private String password;
 
     @Schema(description = "이름", example = "홍길동")
     @NotBlank(message = "이름은 필수입니다.")
     private String name;
 
-    @Schema(description = "파트", example = "베이직")
+    @Schema(description = "파트", example = "basic")
     private String part;
 
     @Schema(description = "기수", example = "17.5")
