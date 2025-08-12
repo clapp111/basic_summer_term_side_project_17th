@@ -33,6 +33,7 @@ public class UserService {
         return userResponseDtoList;
     }
 
+
     @Transactional(readOnly = true)
     public List<UserResponseDto> findByPart(String part) {
         // repository 에서 파트 유저 조회
