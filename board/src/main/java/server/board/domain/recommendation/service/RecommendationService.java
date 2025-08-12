@@ -27,7 +27,7 @@ public class RecommendationService {
 
         // 이미 추천했다면 중복 추천 불가
         if(recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignmentId).isPresent()){
-            throw new RestApiException(ALREADY_RECOMMEND_ERROR);
+            throw new RestApiException(ALREADY_RECOMMEND);
         }
 
         // 추천 엔티티 생성
