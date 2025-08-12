@@ -1,0 +1,67 @@
+Index: board/src/main/resources/application-prod.yml
+===================================================================
+diff --git a/board/src/main/resources/application-prod.yml b/board/src/main/resources/application-prod.yml
+deleted file mode 100644
+--- a/board/src/main/resources/application-prod.yml	(revision 102382c68034ae620cb6e0bf10169bf5e73599c5)
++++ /dev/null	(revision 102382c68034ae620cb6e0bf10169bf5e73599c5)
+@@ -1,21 +0,0 @@
+-spring:
+-  datasource:
+-    url: ${MYSQL_URL}
+-    username: ${MYSQL_USERNAME}
+-    password: ${MYSQL_PASSWORD}
+-    driver-class-name: com.mysql.cj.jdbc.Driver
+-
+-  jpa:
+-    database: mysql
+-    database-platform: org.hibernate.dialect.MySQL8Dialect
+-    hibernate:
+-      ddl-auto: update
+-    properties:
+-      hibernate:
+-        format_sql: true
+-        show_sql: true
+-    open-in-view: false
+-
+-  security:
+-    jwt:
+-      secret: ${JWT_SECRET}
+\ No newline at end of file
+Index: board/src/main/java/server/board/global/exception/error/CustomErrorCode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package server.board.global.exception.error;\r\n\r\nimport lombok.Getter;\r\nimport lombok.RequiredArgsConstructor;\r\nimport org.springframework.http.HttpStatus;\r\n\r\n@Getter\r\n@RequiredArgsConstructor\r\npublic enum CustomErrorCode implements ErrorCode {\r\n\r\n    //400 Bad Request\r\n    INVALID_REQUEST(HttpStatus.BAD_REQUEST, 400, \"유효하지 않은 인자값입니다\"),\r\n    INVALID_PART_VALUE(HttpStatus.BAD_REQUEST, 400, \"유효하지 않은 파트입니다.\"),\r\n    INVALID_PASSWORD_VALUE(HttpStatus.BAD_REQUEST, 400, \"일치하지 않은 패스워드입니다.\"),\r\n\r\n    // 403 Forbidden\r\n    ASSIGNMENT_MODIFY_FORBIDDEN(HttpStatus.FORBIDDEN, 403, \"로그인한 유저의 해당 과제 수정 권한이 없음\"),\r\n    ASSIGNMENT_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, 403, \"로그인한 유저의 해당 과제 삭제 권한이 없음\"),\r\n\r\n    // 404 NOT_FOUND\r\n    USER_NOT_FOUND(HttpStatus.NOT_FOUND, 404,\"유저가 존재하지 않습니다\"),\r\n    ASSIGNMENT_NOT_FOUND(HttpStatus.NOT_FOUND, 404,\"과제가 존재하지 않습니다\"),\r\n    RECOMMENDATION_NOT_FOUND(HttpStatus.NOT_FOUND, 404,\"추천 기록이 존재하지 않습니다.\"),\r\n\r\n    // 409 CONFLICT\r\n    DUPLICATE_USER(HttpStatus.CONFLICT, 409, \"이미 가입된 이메일입니다.\"),\r\n    ALREADY_RECOMMEND_ERROR(HttpStatus.CONFLICT, 409, \"이미 추천한 과제입니다.\"),\r\n\r\n    // 500 INTERNAL SERVER ERROR\r\n    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, \"서버 내부 오류 발생\");\r\n\r\n    private final HttpStatus httpStatus;\r\n    private final Integer code;\r\n    private final String message;\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/board/src/main/java/server/board/global/exception/error/CustomErrorCode.java b/board/src/main/java/server/board/global/exception/error/CustomErrorCode.java
+--- a/board/src/main/java/server/board/global/exception/error/CustomErrorCode.java	(revision 102382c68034ae620cb6e0bf10169bf5e73599c5)
++++ b/board/src/main/java/server/board/global/exception/error/CustomErrorCode.java	(date 1754975734233)
+@@ -24,7 +24,7 @@
+ 
+     // 409 CONFLICT
+     DUPLICATE_USER(HttpStatus.CONFLICT, 409, "이미 가입된 이메일입니다."),
+-    ALREADY_RECOMMEND_ERROR(HttpStatus.CONFLICT, 409, "이미 추천한 과제입니다."),
++    ALREADY_RECOMMEND(HttpStatus.CONFLICT, 409, "이미 추천한 과제입니다."),
+ 
+     // 500 INTERNAL SERVER ERROR
+     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 내부 오류 발생");
+Index: board/src/main/java/server/board/domain/recommendation/service/RecommendationService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package server.board.domain.recommendation.service;\r\n\r\nimport lombok.RequiredArgsConstructor;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.transaction.annotation.Transactional;\r\nimport server.board.domain.assignment.dto.AssignmentResponseDto;\r\nimport server.board.domain.assignment.entity.Assignment;\r\nimport server.board.domain.assignment.repository.AssignmentRepository;\r\nimport server.board.domain.recommendation.entity.Recommendation;\r\nimport server.board.domain.recommendation.repository.RecommendationRepository;\r\nimport server.board.domain.user.entity.UserDetailsImpl;\r\nimport server.board.global.exception.error.RestApiException;\r\n\r\nimport static server.board.global.exception.error.CustomErrorCode.*;\r\n\r\n@Service\r\n@RequiredArgsConstructor\r\npublic class RecommendationService {\r\n\r\n    public final AssignmentRepository assignmentRepository;\r\n    public final RecommendationRepository recommendationRepository;\r\n\r\n    @Transactional\r\n    public AssignmentResponseDto addRecommendation(Long assignmentId, UserDetailsImpl userDetails) {\r\n        Assignment assignment = assignmentRepository.findById(assignmentId)\r\n                .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));\r\n\r\n        // 이미 추천했다면 중복 추천 불가\r\n        if(recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignmentId).isPresent()){\r\n            throw new RestApiException(ALREADY_RECOMMEND_ERROR);\r\n        }\r\n\r\n        // 추천 엔티티 생성\r\n        Recommendation recommendation = Recommendation.create(userDetails.getUser(), assignment);\r\n        recommendationRepository.save(recommendation);\r\n\r\n        return AssignmentResponseDto.create(assignment, Boolean.TRUE);\r\n    }\r\n\r\n    @Transactional\r\n    public void deleteRecommendation(Long assignmentId, UserDetailsImpl userDetails) {\r\n        Assignment assignment = assignmentRepository.findById(assignmentId)\r\n                .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));\r\n\r\n        // 추천하지 않았다면 추천 취소 불가\r\n        Recommendation recommendation = recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignmentId)\r\n                .orElseThrow(() -> new RestApiException(RECOMMENDATION_NOT_FOUND));\r\n\r\n        // 추천 엔티티 삭제\r\n        recommendationRepository.delete(recommendation);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/board/src/main/java/server/board/domain/recommendation/service/RecommendationService.java b/board/src/main/java/server/board/domain/recommendation/service/RecommendationService.java
+--- a/board/src/main/java/server/board/domain/recommendation/service/RecommendationService.java	(revision 102382c68034ae620cb6e0bf10169bf5e73599c5)
++++ b/board/src/main/java/server/board/domain/recommendation/service/RecommendationService.java	(date 1754975734233)
+@@ -27,7 +27,7 @@
+ 
+         // 이미 추천했다면 중복 추천 불가
+         if(recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignmentId).isPresent()){
+-            throw new RestApiException(ALREADY_RECOMMEND_ERROR);
++            throw new RestApiException(ALREADY_RECOMMEND);
+         }
+ 
+         // 추천 엔티티 생성
